@@ -1,0 +1,13 @@
+{
+  "name": "sukisuki-club-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "sukisuki.club ポータル — 蓮ノ空のこと好き好きクラブのみなさんのためのファンサイトポータル",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
