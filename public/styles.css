@@ -362,6 +362,13 @@ a { color: inherit; }
 .site-card-soon:hover { transform: none; box-shadow: none; }
 .site-card-soon::before { opacity: 0.35; }
 
+.site-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  box-shadow: 0 4px 12px rgba(37, 58, 99, 0.16);
+}
+
 .site-tag {
   font-family: var(--font-display);
   font-weight: 700;
