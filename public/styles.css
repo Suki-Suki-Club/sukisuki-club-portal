@@ -1,26 +1,28 @@
 /* ==========================================================================
    sukisuki.club — 蓮ノ空のこと好き好きクラブのみなさんのポータル
-   コンセプト「第1章の一日」: 朝の空にはじまり、スクロールとともに
-   夕暮れ・夜へ降りていく。年表が夜に沈み、最後に星が瞬く。
+   コンセプト「よく晴れた蓮ノ空」: ビビッドな空色×白×メンバーカラー11色。
+   丸ゴシックとポップな動きで、ラブライブ！らしい明るさに。
    ========================================================================== */
 
 :root {
-  --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
-  --font-body: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-display: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  --font-body: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
 
-  --ink: #2a3450;
-  --ink-strong: #1d2438;
-  --moon: #f1ecfb;
-  --moon-soft: rgba(241, 236, 251, 0.72);
-
-  --paper: rgba(255, 255, 255, 0.55);
-  --paper-solid: rgba(255, 255, 255, 0.78);
-  --paper-line: rgba(255, 255, 255, 0.65);
-
-  --lotus: #d987a8;
+  --navy: #253a63;
+  --navy-soft: rgba(37, 58, 99, 0.72);
+  --sky: #35b6ea;
+  --sky-deep: #1c96cf;
+  --pink: #ff5fa2;
   --star: #fad764; /* いちばん星色 */
+  --cloud-white: #ffffff;
+  --bg-blue: #e9f6fe;
 
-  --radius: 16px;
+  --card-border: #dbeefb;
+  --shadow-soft: 0 10px 30px rgba(53, 182, 234, 0.16);
+  --shadow-hover: 0 18px 40px rgba(53, 182, 234, 0.28);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --radius: 22px;
   --maxw: 1120px;
 }
 
@@ -32,48 +34,36 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.9;
-  color: var(--ink);
-  background: #0e0b1e;
+  color: var(--navy);
+  background: #fff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-::selection { background: rgba(255, 26, 148, 0.25); }
+::selection { background: rgba(255, 95, 162, 0.3); }
 
 img, svg { max-width: 100%; }
 
 a { color: inherit; }
 
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 3px solid var(--pink);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 /* --------------------------------------------------------------------------
-   空のグラデーション(セクションごとに連結)
+   スクロール出現アニメーション
    -------------------------------------------------------------------------- */
 
-.hero        { background: linear-gradient(180deg, #e3f2fb 0%, #cfe6f7 100%); }
-.sec-sites   { background: linear-gradient(180deg, #cfe6f7 0%, #b9d3f0 100%); }
-.sec-about   { background: linear-gradient(180deg, #b9d3f0 0%, #aebbe6 100%); }
-.sec-members { background: linear-gradient(180deg, #aebbe6 0%, #a191cc 100%); }
-.sec-units   { background: linear-gradient(180deg, #a191cc 0%, #6f5b9e 100%); }
-.sec-history { background: linear-gradient(180deg, #6f5b9e 0%, #332a5c 100%); color: var(--moon); }
-.sec-next    { color: var(--moon); }
-.footer      { background: linear-gradient(180deg, #191434 0%, #0e0b1e 100%); color: var(--moon-soft); }
-
-.sec-next {
-  background-image:
-    radial-gradient(1.5px 1.5px at 18% 28%, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(1px 1px at 32% 62%, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1.5px 1.5px at 47% 20%, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(1px 1px at 58% 50%, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1.5px 1.5px at 71% 34%, rgba(255, 255, 255, 0.85), transparent),
-    radial-gradient(1px 1px at 84% 58%, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1px 1px at 12% 74%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 90% 16%, rgba(255, 255, 255, 0.65), transparent),
-    linear-gradient(180deg, #332a5c 0%, #191434 100%);
+.rv {
+  opacity: 0;
+  transform: translateY(26px) scale(0.98);
+  transition: opacity 0.6s ease, transform 0.6s var(--bounce);
+  transition-delay: var(--d, 0s);
 }
+
+.rv.show { opacity: 1; transform: none; }
 
 /* --------------------------------------------------------------------------
    ヒーロー
@@ -87,138 +77,250 @@ a { color: inherit; }
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  padding: clamp(96px, 14vh, 160px) 24px clamp(120px, 18vh, 200px);
+  padding: clamp(90px, 13vh, 150px) 24px clamp(90px, 13vh, 150px);
+  background: linear-gradient(180deg, #38b5ec 0%, #7fd2f5 55%, #c9ecfc 100%);
 }
 
-.hero-inner { position: relative; z-index: 2; max-width: 760px; }
+.hero-inner { position: relative; z-index: 3; max-width: 780px; }
+
+.hero-inner::before {
+  content: "";
+  position: absolute;
+  inset: -12% -20%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  z-index: -1;
+}
 
 .hero-eyebrow {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.45em;
-  text-transform: lowercase;
-  color: rgba(42, 52, 80, 0.66);
-  margin-bottom: 28px;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  color: var(--sky-deep);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 8px 22px;
+  margin-bottom: 26px;
+  box-shadow: 0 4px 14px rgba(28, 130, 180, 0.18);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  line-height: 1.34;
-  letter-spacing: 0.05em;
-  color: var(--ink-strong);
-  margin-bottom: 30px;
+  font-weight: 800;
+  font-size: clamp(2.3rem, 6.4vw, 4.2rem);
+  line-height: 1.32;
+  letter-spacing: 0.04em;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.hero-line { display: block; }
+
+.ch {
+  display: inline-block;
+  animation: chpop 0.55s var(--bounce) both;
+  animation-delay: calc(var(--i) * 42ms + 0.15s);
+}
+
+@keyframes chpop {
+  from { opacity: 0; transform: translateY(28px) scale(0.6) rotate(-6deg); }
+}
+
+.c1 { color: #ff1a94; }
+.c2 { color: #f8a000; }
+.c3 { color: #0089c9; }
+.c4 { color: #8d79dd; }
+
+.hero-swoosh {
+  width: min(320px, 62vw);
+  margin: 0 auto 22px;
+  display: block;
 }
 
 .hero-lead {
-  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-  color: rgba(42, 52, 80, 0.85);
-  margin-bottom: 40px;
+  font-size: clamp(0.95rem, 1.4vw, 1.06rem);
+  font-weight: 500;
+  color: var(--navy);
+  margin-bottom: 36px;
 }
 
 .hero-actions {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .btn {
   display: inline-block;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
   text-decoration: none;
-  padding: 13px 34px;
+  padding: 14px 36px;
   border-radius: 999px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  transition: transform 0.3s var(--bounce), box-shadow 0.3s ease;
 }
 
 .btn-primary {
-  background: var(--ink-strong);
-  color: #f4f8fd;
-  box-shadow: 0 6px 24px rgba(29, 36, 56, 0.25);
+  background: var(--pink);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(255, 95, 162, 0.45);
 }
 
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(29, 36, 56, 0.3); }
+.btn-primary:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 14px 30px rgba(255, 95, 162, 0.55); }
 
 .btn-ghost {
-  color: var(--ink-strong);
-  border: 1.5px solid rgba(29, 36, 56, 0.4);
-  background: rgba(255, 255, 255, 0.25);
+  color: var(--navy);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 18px rgba(28, 130, 180, 0.2);
 }
 
-.btn-ghost:hover { background: rgba(255, 255, 255, 0.55); transform: translateY(-2px); }
+.btn-ghost:hover { transform: translateY(-3px) scale(1.06); }
 
 /* 雲 */
 .hero-clouds i {
   position: absolute;
   display: block;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
-  animation: drift 70s linear infinite;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  animation: drift 60s linear infinite;
+  z-index: 1;
 }
 
-.hero-clouds i:nth-child(1) { width: 480px; height: 130px; top: 14%; left: -8%; }
-.hero-clouds i:nth-child(2) { width: 360px; height: 100px; top: 32%; right: -6%; animation-duration: 95s; animation-delay: -30s; }
-.hero-clouds i:nth-child(3) { width: 560px; height: 150px; bottom: 10%; left: 18%; animation-duration: 120s; animation-delay: -60s; }
+.hero-clouds i:nth-child(1) { width: 520px; height: 150px; top: 12%; left: -10%; }
+.hero-clouds i:nth-child(2) { width: 380px; height: 110px; top: 30%; right: -8%; animation-duration: 80s; animation-delay: -25s; }
+.hero-clouds i:nth-child(3) { width: 620px; height: 170px; bottom: 6%; left: 12%; animation-duration: 100s; animation-delay: -50s; }
+.hero-clouds i:nth-child(4) { width: 300px; height: 90px; bottom: 26%; right: 16%; animation-duration: 70s; animation-delay: -12s; }
 
 @keyframes drift {
-  from { transform: translateX(-6vw); }
-  50%  { transform: translateX(6vw); }
-  to   { transform: translateX(-6vw); }
+  from { transform: translateX(-7vw); }
+  50%  { transform: translateX(7vw); }
+  to   { transform: translateX(-7vw); }
 }
 
-.hero-lotus {
+/* きらきら */
+.hero-sparkles i {
   position: absolute;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  color: var(--lotus);
-  opacity: 0.55;
-  z-index: 1;
+  width: 14px;
+  height: 14px;
+  background: #fffdf0;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  animation: twinkle 2.6s ease-in-out infinite;
+  z-index: 2;
+}
+
+.hero-sparkles i:nth-child(1) { top: 18%; left: 30%; }
+.hero-sparkles i:nth-child(2) { top: 12%; right: 26%; width: 10px; height: 10px; animation-delay: 0.5s; }
+.hero-sparkles i:nth-child(3) { top: 42%; left: 12%; width: 11px; height: 11px; animation-delay: 1s; }
+.hero-sparkles i:nth-child(4) { top: 38%; right: 10%; animation-delay: 1.5s; }
+.hero-sparkles i:nth-child(5) { bottom: 24%; left: 22%; width: 9px; height: 9px; animation-delay: 2s; }
+.hero-sparkles i:nth-child(6) { bottom: 16%; right: 32%; width: 12px; height: 12px; animation-delay: 0.8s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1.15) rotate(18deg); }
+}
+
+/* ふわふわ浮かぶメンバーアイコン */
+.hero-icons img {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 5px 12px rgba(20, 90, 130, 0.2));
+  animation: floaty 4.6s ease-in-out infinite alternate;
+  animation-delay: var(--d);
+}
+
+@keyframes floaty {
+  from { transform: translateY(-9px) rotate(-5deg); }
+  to   { transform: translateY(11px) rotate(6deg); }
+}
+
+/* --------------------------------------------------------------------------
+   マーキー(ファンネームのリボン)
+   -------------------------------------------------------------------------- */
+
+.marquee {
+  overflow: hidden;
+  background: #fff;
+  border-top: 4px solid;
+  border-bottom: 4px solid;
+  border-image: linear-gradient(90deg, #68be8d, #ba2636, #afb3af, #f8b500, #005e99, #ff1a94, #a2d7dd, #fad764, #9d8de2, #3ad6df, #f46455) 1;
+  padding: 11px 0;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: mq 28s linear infinite;
+}
+
+.mq-half {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-right: 30px;
+}
+
+.mq-half span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: var(--sky-deep);
+  white-space: nowrap;
+}
+
+.mq-half img { width: 26px; height: 26px; }
+
+@keyframes mq {
+  to { transform: translateX(-50%); }
 }
 
 /* --------------------------------------------------------------------------
    セクション共通
    -------------------------------------------------------------------------- */
 
-.sec { padding: clamp(76px, 10vw, 128px) 24px; }
+.sec { padding: clamp(70px, 9vw, 110px) 24px; }
 
-.sec-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: clamp(20px, 4vw, 56px);
-  align-items: start;
-}
+.sec-inner { max-width: var(--maxw); margin: 0 auto; }
 
-.sec-label {
-  writing-mode: vertical-rl;
+.sec-sites   { background: #ffffff; }
+.sec-about   { background: var(--bg-blue); }
+.sec-members { background: #ffffff; }
+.sec-units   { background: var(--bg-blue); }
+.sec-history { background: #ffffff; }
+
+.sec-eyebrow {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.42em;
-  opacity: 0.55;
-  padding-top: 10px;
-  user-select: none;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.3em;
+  color: var(--pink);
+  margin-bottom: 10px;
 }
 
 .sec-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2.15rem);
-  letter-spacing: 0.04em;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3.1vw, 2.2rem);
+  letter-spacing: 0.03em;
   line-height: 1.5;
   margin-bottom: 14px;
 }
 
-.sec-desc { margin-bottom: 36px; opacity: 0.85; }
+.sec-desc { margin-bottom: 36px; color: var(--navy-soft); }
+
+/* 波の区切り */
+.dv { line-height: 0; }
+.dv svg { display: block; width: 100%; height: 70px; }
 
 /* --------------------------------------------------------------------------
    ファンサイト
@@ -227,61 +329,70 @@ a { color: inherit; }
 .site-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 22px;
+  gap: 24px;
 }
 
 .site-card {
-  background: var(--paper-solid);
-  border: 1px solid var(--paper-line);
+  position: relative;
+  background: #fff;
+  border: 2px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 30px 28px;
+  padding: 34px 28px 28px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 8px 32px rgba(60, 76, 120, 0.12);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--bounce), box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
-.site-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(60, 76, 120, 0.18); }
-
-.site-card-soon {
-  background: rgba(255, 255, 255, 0.32);
-  border: 1.5px dashed rgba(42, 52, 80, 0.3);
-  box-shadow: none;
+.site-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--edge, var(--sky));
 }
 
+.site-card:hover { transform: translateY(-8px) rotate(-0.7deg); box-shadow: var(--shadow-hover); }
+
+.site-card-soon { border-style: dashed; box-shadow: none; }
 .site-card-soon:hover { transform: none; box-shadow: none; }
+.site-card-soon::before { opacity: 0.35; }
 
 .site-tag {
-  font-size: 0.72rem;
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: 0.18em;
-  color: rgba(42, 52, 80, 0.6);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--sky-deep);
 }
 
 .site-name {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.03em;
-  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
 }
 
-.site-desc { font-size: 0.92rem; flex-grow: 1; }
+.site-desc { font-size: 0.92rem; color: var(--navy-soft); flex-grow: 1; }
 
 .site-link {
-  font-size: 0.88rem;
+  font-family: var(--font-display);
   font-weight: 700;
-  color: var(--ink-strong);
+  font-size: 0.9rem;
+  color: var(--sky-deep);
   text-decoration: none;
-  border-bottom: 1.5px solid rgba(29, 36, 56, 0.35);
+  border-bottom: 2px solid rgba(28, 150, 207, 0.35);
   align-self: flex-start;
   padding-bottom: 2px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
   word-break: break-all;
 }
 
-.site-link:hover { border-color: var(--ink-strong); }
+.site-link:hover { color: var(--pink); border-color: var(--pink); }
 
 /* --------------------------------------------------------------------------
    蓮ノ空とは
@@ -290,23 +401,26 @@ a { color: inherit; }
 .about-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 22px;
+  gap: 24px;
 }
 
 .about-card {
-  background: var(--paper);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: #fff;
   border-radius: var(--radius);
-  padding: 28px 26px;
+  padding: 30px 28px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--bounce);
 }
+
+.about-card:hover { transform: translateY(-5px); }
 
 .about-card h3 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 800;
   font-size: 1.05rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   margin-bottom: 10px;
-  color: var(--ink-strong);
+  color: var(--sky-deep);
 }
 
 .about-card p { font-size: 0.92rem; }
@@ -315,15 +429,15 @@ a { color: inherit; }
    メンバー
    -------------------------------------------------------------------------- */
 
-.gen { margin-bottom: 34px; }
+.gen { margin-bottom: 36px; }
 .gen:last-child { margin-bottom: 0; }
 
 .gen-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.08rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
+  font-weight: 800;
+  font-size: 1.12rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
 }
 
 .gen-note {
@@ -331,44 +445,53 @@ a { color: inherit; }
   font-weight: 500;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
-  opacity: 0.65;
+  color: var(--navy-soft);
   margin-left: 14px;
 }
 
 .member-list {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .member {
-  background: var(--paper);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  background: #fff;
+  border: 2px solid color-mix(in srgb, var(--c) 35%, #eef7fd);
+  border-radius: 18px;
   padding: 14px 18px;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   column-gap: 14px;
   align-items: center;
+  transition: transform 0.3s var(--bounce), box-shadow 0.3s ease;
 }
 
-.member-dot {
+.member:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--c) 30%, transparent);
+}
+
+.member-icon {
   grid-row: 1 / 3;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--c);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent);
+  width: 52px;
+  height: 52px;
+}
+
+.member:hover .member-icon { animation: wiggle 0.5s ease; }
+
+@keyframes wiggle {
+  25% { transform: rotate(-10deg) scale(1.08); }
+  75% { transform: rotate(10deg) scale(1.08); }
 }
 
 .member-name {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 1.02rem;
   line-height: 1.4;
-  color: var(--ink-strong);
 }
 
 .member-kana {
@@ -377,15 +500,15 @@ a { color: inherit; }
   font-weight: 400;
   font-size: 0.7rem;
   letter-spacing: 0.08em;
-  opacity: 0.65;
+  color: var(--navy-soft);
 }
 
 .member-color {
   grid-column: 2;
-  font-size: 0.73rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  color: color-mix(in srgb, var(--c) 55%, var(--ink));
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--c) 65%, var(--navy));
 }
 
 /* --------------------------------------------------------------------------
@@ -395,7 +518,7 @@ a { color: inherit; }
 .unit-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 22px;
+  gap: 24px;
 }
 
 @media (min-width: 720px) {
@@ -403,37 +526,51 @@ a { color: inherit; }
 }
 
 .unit-card {
-  background: var(--paper-solid);
-  border: 1px solid var(--paper-line);
+  background: #fff;
   border-radius: var(--radius);
-  padding: 0 26px 26px;
+  padding: 0 28px 26px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--bounce), box-shadow 0.3s ease;
 }
 
+.unit-card:hover { transform: translateY(-7px) rotate(0.5deg); box-shadow: var(--shadow-hover); }
+
 .unit-band {
-  height: 7px;
-  margin: 0 -26px 18px;
+  height: 9px;
+  margin: 0 -28px 18px;
+  background-size: 300% 100%;
+  animation: bandflow 7s linear infinite;
+}
+
+@keyframes bandflow {
+  to { background-position: 300% 0; }
 }
 
 .unit-name {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.2rem;
-  letter-spacing: 0.03em;
-  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
 }
 
-.unit-desc { font-size: 0.9rem; flex-grow: 1; }
+.unit-desc { font-size: 0.92rem; color: var(--navy-soft); flex-grow: 1; }
 
 .unit-members {
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  opacity: 0.75;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.84rem;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
 }
+
+.unit-members img { width: 30px; height: 30px; margin-right: -2px; }
 
 /* --------------------------------------------------------------------------
    あゆみ(年表)
@@ -441,17 +578,17 @@ a { color: inherit; }
 
 .timeline {
   list-style: none;
-  border-left: 2px solid rgba(241, 236, 251, 0.28);
-  margin-left: 6px;
+  border-left: 3px dashed rgba(53, 182, 234, 0.45);
+  margin-left: 8px;
   padding-left: 0;
 }
 
 .timeline li {
   position: relative;
   display: grid;
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: 100px 1fr;
   gap: 18px;
-  padding: 0 0 34px 30px;
+  padding: 0 0 32px 30px;
 }
 
 .timeline li:last-child { padding-bottom: 0; }
@@ -459,107 +596,154 @@ a { color: inherit; }
 .timeline li::before {
   content: "";
   position: absolute;
-  left: -7px;
-  top: 9px;
-  width: 12px;
-  height: 12px;
+  left: -10px;
+  top: 8px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--star);
-  box-shadow: 0 0 12px rgba(250, 215, 100, 0.55);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px rgba(250, 215, 100, 0.5), 0 0 14px rgba(250, 215, 100, 0.7);
 }
 
 .timeline time {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-  opacity: 0.85;
-  padding-top: 2px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--sky-deep);
+  padding-top: 1px;
 }
 
 .tl-body h3 {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.06rem;
-  letter-spacing: 0.04em;
+  font-weight: 800;
+  font-size: 1.08rem;
+  letter-spacing: 0.03em;
   margin-bottom: 4px;
 }
 
-.tl-body p { font-size: 0.9rem; opacity: 0.82; }
+.tl-body p { font-size: 0.9rem; color: var(--navy-soft); }
 
 /* --------------------------------------------------------------------------
-   第2章へ
+   第2章へ(夜のライブステージ)
    -------------------------------------------------------------------------- */
 
 .sec-next {
   position: relative;
   text-align: center;
-  padding: clamp(110px, 16vw, 180px) 24px;
+  padding: clamp(100px, 15vw, 170px) 24px;
   overflow: hidden;
+  color: #f3f1ff;
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 30%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 34% 64%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.5px 1.5px at 48% 18%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 60% 48%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(1.5px 1.5px at 72% 32%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 86% 60%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 10% 76%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 92% 14%, rgba(255, 255, 255, 0.7), transparent),
+    linear-gradient(180deg, #3b3f8f 0%, #35317a 55%, #262a5e 100%);
 }
 
-.next-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+.next-inner { position: relative; z-index: 2; max-width: 660px; margin: 0 auto; }
 
 .next-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.7rem, 3.6vw, 2.5rem);
-  letter-spacing: 0.1em;
-  margin-bottom: 20px;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
 }
 
-.next-desc { font-size: 0.98rem; opacity: 0.85; }
+.next-desc { font-size: 1rem; opacity: 0.9; }
 
 /* 106期の、みっつの星 */
 .next-stars i {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: var(--star);
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  animation: twinkle 3.6s ease-in-out infinite;
+  animation: twinkle 3.2s ease-in-out infinite;
 }
 
-.next-stars i:nth-child(1) { top: 24%; left: 24%; }
-.next-stars i:nth-child(2) { top: 16%; right: 30%; animation-delay: 1.2s; }
-.next-stars i:nth-child(3) { bottom: 22%; right: 20%; animation-delay: 2.4s; }
+.next-stars i:nth-child(1) { top: 26%; left: 24%; }
+.next-stars i:nth-child(2) { top: 18%; right: 28%; animation-delay: 1.1s; }
+.next-stars i:nth-child(3) { bottom: 24%; right: 18%; animation-delay: 2.2s; }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.35; transform: scale(0.85); }
-  50%      { opacity: 1; transform: scale(1.15); }
+/* 流れ星 */
+.shooting-star {
+  position: absolute;
+  top: 16%;
+  left: -12%;
+  width: 130px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff);
+  border-radius: 2px;
+  transform: rotate(16deg);
+  opacity: 0;
+  animation: shoot 8s ease-in infinite;
+  animation-delay: 2s;
+}
+
+@keyframes shoot {
+  0%   { transform: translate(0, 0) rotate(16deg); opacity: 0; }
+  4%   { opacity: 1; }
+  13%  { transform: translate(75vw, 22vh) rotate(16deg); opacity: 0; }
+  100% { opacity: 0; }
 }
 
 /* --------------------------------------------------------------------------
    フッター
    -------------------------------------------------------------------------- */
 
-.footer { padding: 72px 24px 44px; text-align: center; }
+.footer {
+  background: linear-gradient(180deg, #262a5e 0%, #1d2148 100%);
+  color: rgba(243, 241, 255, 0.85);
+  padding: 64px 24px 42px;
+  text-align: center;
+}
 
 .footer-inner { max-width: 680px; margin: 0 auto; }
 
-.footer-lotus { width: 74px; color: var(--lotus); opacity: 0.5; margin-bottom: 20px; }
+.footer-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
 
-.footer-disclaimer { font-size: 0.8rem; line-height: 2; margin-bottom: 26px; }
+.footer-dots i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.footer-disclaimer { font-size: 0.8rem; line-height: 2; margin-bottom: 24px; }
 
 .footer-links {
   display: flex;
   gap: 26px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 
 .footer-links a {
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--moon);
+  color: #fff;
   text-decoration: none;
-  border-bottom: 1px solid rgba(241, 236, 251, 0.35);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
   padding-bottom: 2px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
-.footer-links a:hover { border-color: var(--moon); }
+.footer-links a:hover { color: var(--star); border-color: var(--star); }
 
 .footer-copy { font-size: 0.75rem; letter-spacing: 0.12em; opacity: 0.55; }
 
@@ -568,18 +752,11 @@ a { color: inherit; }
    -------------------------------------------------------------------------- */
 
 @media (max-width: 719px) {
-  .sec-inner { display: block; }
-
-  .sec-label {
-    writing-mode: horizontal-tb;
-    display: block;
-    font-size: 0.8rem;
-    letter-spacing: 0.32em;
-    padding-top: 0;
-    margin-bottom: 10px;
-  }
-
   .pc-only { display: none; }
+
+  .hero-icons img:nth-child(n + 7) { display: none; }
+
+  .dv svg { height: 42px; }
 
   .timeline li { grid-template-columns: 1fr; gap: 2px; padding-left: 24px; }
 }
@@ -587,9 +764,18 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
-  .hero-clouds i, .next-stars i {
-    animation: none;
-  }
+  .ch { animation: none; }
 
-  .btn, .site-card { transition: none; }
+  .hero-clouds i,
+  .hero-sparkles i,
+  .hero-icons img,
+  .marquee-track,
+  .unit-band,
+  .next-stars i,
+  .shooting-star,
+  .member:hover .member-icon { animation: none; }
+
+  .rv { opacity: 1; transform: none; transition: none; }
+
+  .btn, .site-card, .about-card, .member, .unit-card { transition: none; }
 }
