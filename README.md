@@ -15,7 +15,8 @@ public/
 ├── styles.css   # スタイル
 ├── script.js    # スクロール出現アニメーション
 ├── favicon.svg  # 蓮の花のファビコン(自作SVG)
-└── icons/       # メンバーアイコン11枚(mypick より流用)
+├── icons/       # メンバーアイコン11枚(mypick より流用)
+└── units/       # ユニットロゴ4枚(link-like-blooming-network より流用)
 ```
 
 デザインコンセプトは「よく晴れた蓮ノ空」。ビビッドな空色×白×メンバーカラー11色の
